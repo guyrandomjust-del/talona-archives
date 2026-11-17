@@ -1,0 +1,178 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>University of Talonà — Digital Archives</title>
+<style>
+  :root { --bg: #f4f3ef; --card: #ffffff; --ink: #1c1c1c; --muted: #5f5f5f; --accent: #2b4c7e; --border: #dcdad3; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Georgia, 'Times New Roman', serif; background: var(--bg); color: var(--ink); display: flex; flex-direction: column; min-height: 100vh; }
+  header { background: #1a1a1a; color: #f4f3ef; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid var(--accent); flex-wrap: wrap; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 1px solid #555; }
+  .brand h1 { font-size: 1.25rem; margin: 0; letter-spacing: 0.4px; }
+  .brand span { font-family: system-ui, sans-serif; font-size: 0.78rem; color: #aaa; display: block; }
+  .search-bar { display: flex; gap: 8px; flex: 1; max-width: 480px; }
+  .search-bar input { flex: 1; padding: 8px 12px; border: 1px solid #444; background: #2b2b2b; color: #fff; font-family: system-ui, sans-serif; border-radius: 3px; }
+  .layout { display: flex; flex: 1; }
+  nav { width: 250px; background: #eae8e1; border-right: 1px solid var(--border); padding: 16px; flex-shrink: 0; font-family: system-ui, sans-serif; }
+  nav h3 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin: 0 0 10px; }
+  .cat-btn { display: flex; justify-content: space-between; width: 100%; background: none; border: none; text-align: left; padding: 8px 10px; cursor: pointer; border-radius: 4px; color: var(--ink); font-size: 0.9rem; margin-bottom: 3px; }
+  .cat-btn:hover { background: #dcd9d0; }
+  .cat-btn.active { background: var(--accent); color: #fff; font-weight: 600; }
+  .badge { font-size: 0.75rem; opacity: 0.8; }
+  main { flex: 1; padding: 24px 32px; max-width: 1100px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; cursor: pointer; transition: transform 0.12s, box-shadow 0.12s; display: flex; flex-direction: column; }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-color: var(--accent); }
+  .card-thumb { height: 150px; background: #e3e1da; display: flex; align-items: center; justify-content: center; overflow: hidden; border-bottom: 1px solid var(--border); }
+  .card-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .card-thumb .placeholder { font-family: system-ui, sans-serif; font-size: 0.8rem; color: var(--muted); padding: 12px; text-align: center; }
+  .card-body { padding: 12px 14px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+  .card-cat { font-family: system-ui, sans-serif; font-size: 0.7rem; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 4px; }
+  .card-title { font-size: 1rem; font-weight: bold; margin: 0 0 8px; line-height: 1.3; }
+  .card-meta { font-family: system-ui, sans-serif; font-size: 0.75rem; color: var(--muted); }
+  .back-btn { font-family: system-ui, sans-serif; background: var(--card); border: 1px solid var(--border); padding: 7px 14px; border-radius: 4px; cursor: pointer; margin-bottom: 18px; font-weight: 600; }
+  .back-btn:hover { background: #eae8e1; }
+  .record-header { background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: 4px; margin-bottom: 20px; }
+  .record-header h2 { margin: 4px 0 8px; font-size: 1.6rem; }
+  .post { background: var(--card); border: 1px solid var(--border); padding: 18px 20px; border-radius: 4px; margin-bottom: 14px; }
+  .post-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-family: system-ui, sans-serif; }
+  .post-head img { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; }
+  .role-tag { font-size: 0.7rem; padding: 2px 6px; border-radius: 3px; background: #eee; color: #333; margin-left: 6px; }
+  .post-text { line-height: 1.6; white-space: pre-wrap; font-size: 1rem; }
+  .attachments { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
+  .attachments img { max-width: 100%; max-height: 520px; border: 1px solid var(--border); border-radius: 3px; }
+  .embed { border-left: 3px solid var(--accent); background: #f9f8f5; padding: 10px 14px; margin-top: 10px; font-family: system-ui, sans-serif; font-size: 0.9rem; }
+  @media (max-width: 760px) { .layout { flex-direction: column; } nav { width: 100%; border-right: none; border-bottom: 1px solid var(--border); } }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <img id="guild-icon" src="" onerror="this.style.display='none'">
+    <div>
+      <h1 id="guild-name">University of Talonà — Archives</h1>
+      <span id="archive-stats">Loading static archive...</span>
+    </div>
+  </div>
+  <div class="search-bar">
+    <input type="text" id="search" placeholder="Search titles, authors, or message text..." oninput="renderGrid()">
+  </div>
+</header>
+<div class="layout">
+  <nav id="sidebar">
+    <h3>Collections</h3>
+    <div id="cat-list"></div>
+  </nav>
+  <main id="content"></main>
+</div>
+
+<script src="archive-data.js"></script>
+<script>
+const GH_USER = "guyrandomjust-del";
+const records = (window.ARCHIVE_DATA || []).map(entry => {
+  const d = entry.data;
+  const folder = entry.folder;
+  const fixPath = p => {
+    if (!p) return '';
+    if (p.startsWith('http')) return p;
+    const clean = p.replace(/\\/g, '/').split('/').map(encodeURIComponent).join('/');
+    return 'https://' + GH_USER + '.github.io/' + folder + '/' + clean;
+  };
+  let thumb = '';
+  for (const m of d.messages) {
+    const img = (m.attachments || []).find(a => /\.(png|jpe?g|gif|webp)$/i.test(a.fileName));
+    if (img) { thumb = fixPath(img.url); break; }
+  }
+  return { folder, d, fixPath, thumb };
+});
+
+let activeCategory = 'ALL';
+
+function init() {
+  if (records.length > 0) {
+    const first = records[0];
+    document.getElementById('guild-name').textContent = first.d.guild.name + ' — Digital Archives';
+    if (first.d.guild.iconUrl) document.getElementById('guild-icon').src = first.fixPath(first.d.guild.iconUrl);
+  }
+  const counts = {};
+  records.forEach(r => counts[r.folder] = (counts[r.folder] || 0) + 1);
+  const cats = Object.keys(counts).sort();
+
+  const catList = document.getElementById('cat-list');
+  catList.innerHTML = '<button class="cat-btn active" onclick="selectCat(\'ALL\', this)"><span>All Collections</span><span class="badge">' + records.length + '</span></button>' +
+    cats.map(c => '<button class="cat-btn" onclick="selectCat(\'' + c + '\', this)"><span>' + c + '</span><span class="badge">' + counts[c] + '</span></button>').join('');
+
+  document.getElementById('archive-stats').textContent = records.length + ' archived threads across ' + cats.length + ' collections';
+  renderGrid();
+}
+
+function selectCat(cat, btn) {
+  activeCategory = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderGrid();
+}
+
+function renderGrid() {
+  const q = document.getElementById('search').value.toLowerCase().trim();
+  const filtered = records.filter(r => {
+    if (activeCategory !== 'ALL' && r.folder !== activeCategory) return false;
+    if (!q) return true;
+    if (r.d.channel.name.toLowerCase().includes(q) || r.folder.toLowerCase().includes(q)) return true;
+    return r.d.messages.some(m => (m.content || '').toLowerCase().includes(q) || (m.author.nickname || m.author.name || '').toLowerCase().includes(q));
+  });
+
+  const main = document.getElementById('content');
+  main.innerHTML = '<div class="grid">' + filtered.map(r => {
+    const realIdx = records.indexOf(r);
+    const firstMsg = r.d.messages[0];
+    const date = firstMsg ? new Date(firstMsg.timestamp).toLocaleDateString() : '';
+    const author = firstMsg ? (firstMsg.author.nickname || firstMsg.author.name) : 'Unknown';
+    return '<div class="card" onclick="openRecord(' + realIdx + ')">' +
+      '<div class="card-thumb">' + (r.thumb ? '<img src="' + r.thumb + '" loading="lazy">' : '<div class="placeholder">Text / Document Archive</div>') + '</div>' +
+      '<div class="card-body"><div><div class="card-cat">' + r.folder + '</div><div class="card-title">' + r.d.channel.name + '</div></div>' +
+      '<div class="card-meta">By ' + author + ' • ' + date + ' • ' + r.d.messageCount + ' post(s)</div></div></div>';
+  }).join('') + '</div>';
+}
+
+function openRecord(idx) {
+  const r = records[idx];
+  const main = document.getElementById('content');
+  window.scrollTo(0, 0);
+
+  const postsHtml = r.d.messages.map(m => {
+    const author = m.author.nickname || m.author.name;
+    const topRole = (m.author.roles || [])[0];
+    const roleBadge = topRole ? '<span class="role-tag" style="border-left: 3px solid ' + (topRole.color || '#666') + '">' + topRole.name + '</span>' : '';
+    const avatar = r.fixPath(m.author.avatarUrl);
+    const time = new Date(m.timestamp).toLocaleString();
+
+    const atts = (m.attachments || []).map(a => {
+      const src = r.fixPath(a.url);
+      if (/\.(png|jpe?g|gif|webp)$/i.test(a.fileName)) return '<a href="' + src + '" target="_blank"><img src="' + src + '" alt="' + a.fileName + '"></a>';
+      if (/\.(mp3|wav|ogg)$/i.test(a.fileName)) return '<audio controls src="' + src + '"></audio>';
+      if (/\.(mp4|webm|mov)$/i.test(a.fileName)) return '<video controls style="max-width:100%" src="' + src + '"></video>';
+      return '<a href="' + src + '" download="' + a.fileName + '">📎 Download ' + a.fileName + '</a>';
+    }).join('');
+
+    const embeds = (m.embeds || []).map(e => '<div class="embed"><strong>' + (e.title || '') + '</strong><div>' + (e.description || '') + '</div></div>').join('');
+
+    return '<article class="post"><div class="post-head"><img src="' + avatar + '" onerror="this.style.display=\'none\'">' +
+      '<div><strong>' + author + '</strong>' + roleBadge + '<div style="font-size:0.75rem;color:#666">' + time + '</div></div></div>' +
+      (m.content ? '<div class="post-text">' + m.content.replace(/</g, '&lt;') + '</div>' : '') +
+      (atts ? '<div class="attachments">' + atts + '</div>' : '') + embeds + '</article>';
+  }).join('');
+
+  main.innerHTML = '<button class="back-btn" onclick="renderGrid()">← Back to Archive Catalog</button>' +
+    '<div class="record-header"><div class="card-cat">' + r.folder + '</div><h2>' + r.d.channel.name + '</h2>' +
+    '<div class="card-meta">Thread ID: ' + r.d.channel.id + ' • Archived: ' + new Date(r.d.exportedAt).toLocaleDateString() + ' • ' + r.d.messageCount + ' messages</div></div>' +
+    postsHtml;
+}
+
+init();
+</script>
+</body>
+</html>

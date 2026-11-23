@@ -42,7 +42,7 @@
     top: 0;
     z-index: 30;
   }
-  .brand { display: flex; align-items: center; gap: 13px; }
+  .brand { display: flex; align-items: center; gap: 13px; cursor: pointer; }
   .brand img {
     width: 44px;
     height: 44px;
@@ -92,6 +92,22 @@
     user-select: none;
   }
   .toggle-pill input { margin: 0; accent-color: var(--gold); cursor: pointer; }
+  .header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-family: system-ui, -apple-system, sans-serif; }
+  .guide-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 13px;
+    background: #24477a;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.16);
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 5px;
+    white-space: nowrap;
+    transition: background 0.15s ease;
+  }
+  .guide-btn:hover, .guide-btn.active { background: var(--gold); color: #161922; }
   .discord-btn {
     display: inline-flex;
     align-items: center;
@@ -99,7 +115,6 @@
     background: #5865F2;
     color: #fff;
     text-decoration: none;
-    font-family: system-ui, -apple-system, sans-serif;
     font-size: 0.85rem;
     font-weight: 600;
     border-radius: 5px;
@@ -123,6 +138,7 @@
     color: var(--muted);
     margin: 0 0 10px 6px;
   }
+  nav h3.spaced { margin-top: 20px; }
   .cat-btn {
     display: flex;
     justify-content: space-between;
@@ -234,7 +250,7 @@
     color: var(--muted);
   }
   .load-more-wrap { text-align: center; margin-top: 24px; }
-  .load-more-btn, .back-btn, .copy-link-btn {
+  .load-more-btn, .back-btn, .copy-link-btn, .action-btn {
     font-family: system-ui, -apple-system, sans-serif;
     background: var(--surface);
     border: 1px solid var(--border);
@@ -246,10 +262,16 @@
     color: var(--ink);
     transition: background 0.12s, border-color 0.12s;
   }
-  .load-more-btn:hover, .back-btn:hover, .copy-link-btn:hover {
+  .load-more-btn:hover, .back-btn:hover, .copy-link-btn:hover, .action-btn:hover {
     background: var(--surface-alt);
     border-color: var(--accent);
   }
+  .action-btn.primary {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  .action-btn.primary:hover { background: var(--accent-hover); }
   .thread-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
   .record-header {
     background: var(--surface);
@@ -261,6 +283,64 @@
     box-shadow: var(--shadow);
   }
   .record-header h2 { margin: 4px 0 8px; font-size: 1.55rem; }
+  .guide-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 22px 24px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow);
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+  .guide-panel h3 {
+    margin: 0 0 10px;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.25rem;
+    color: var(--ink);
+  }
+  .guide-panel p { margin: 0 0 12px; color: var(--muted); font-size: 0.92rem; line-height: 1.55; }
+  .guide-steps { margin: 10px 0 14px 20px; padding: 0; color: var(--ink); font-size: 0.9rem; line-height: 1.65; }
+  .guide-steps li { margin-bottom: 6px; }
+  .code-box-wrap { position: relative; margin: 12px 0; }
+  pre.code-box {
+    background: #161922;
+    color: #e8edf7;
+    padding: 14px 16px;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    margin: 0;
+    border: 1px solid #2b3245;
+  }
+  .copy-code-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #273044;
+    color: #fff;
+    border: 1px solid #3f4d6b;
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+  .copy-code-btn:hover { background: var(--accent); }
+  .folder-tree {
+    background: #f8f7f3;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.82rem;
+    line-height: 1.55;
+    color: var(--ink);
+    white-space: pre;
+    overflow-x: auto;
+  }
   .post {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -350,7 +430,7 @@
 </head>
 <body>
 <header>
-  <div class="brand">
+  <div class="brand" onclick="openCatalog()">
     <img id="guild-icon" src="talona-emblem.webp" alt="University of Talonà Emblem" onerror="this.style.display='none'">
     <div>
       <h1 id="guild-name">University of Talonà — Digital Archives</h1>
@@ -370,13 +450,18 @@
       <span>Media Only</span>
     </label>
   </div>
-  <a class="discord-btn" href="https://discord.gg/S4AyCpAs9X" target="_blank" rel="noopener noreferrer">Discord Server</a>
+  <div class="header-actions">
+    <button class="guide-btn" id="nav-guide-btn" onclick="openDownloadGuide()">How to Download &amp; Install</button>
+    <a class="discord-btn" href="https://discord.gg/S4AyCpAs9X" target="_blank" rel="noopener noreferrer">Discord Server</a>
+  </div>
 </header>
 
 <div class="layout">
   <nav id="sidebar">
     <h3>Collections</h3>
     <div id="cat-list"></div>
+    <h3 class="spaced">Offline &amp; Setup</h3>
+    <button class="cat-btn" id="side-guide-btn" onclick="openDownloadGuide()"><span>How to Download &amp; Install</span><span class="badge">Guide</span></button>
   </nav>
   <main id="content"></main>
 </div>
@@ -399,6 +484,7 @@
 const GH_USER = "guyrandomjust-del";
 const PAGE_SIZE = 48;
 let activeCategory = "ALL";
+let isGuideView = false;
 let visibleCount = PAGE_SIZE;
 
 function escapeHtml(str) {
@@ -427,6 +513,148 @@ const records = (window.ARCHIVE_DATA || []).map(entry => {
   }
   return { folder, d, fixPath, thumb, hasMedia: hasAttachment(d) };
 });
+
+function getArchiveRepos() {
+  const set = new Set(records.map(r => r.folder).filter(Boolean));
+  return Array.from(set).sort();
+}
+
+function buildInstallerScript(repos) {
+  const repoArrayLiteral = repos.length
+    ? repos.map(r => `'${r}'`).join(", ")
+    : "'art-archives', 'city-archive', 'comics-archive', 'currency-archive', 'document-archives', 'ea-countryballs-archive', 'ea-map-archives', 'flag-archives', 'music-archive', 'news-archive', 'propaganda-archive', 'ships-archive'";
+
+  return `# Run this inside whichever folder you want to store the archive in!
+# Example: cd C:\\Users\\YourName\\Documents  -> creates Talona-Archives-Offline inside it.
+
+$baseDir = Join-Path (Get-Location).Path "Talona-Archives-Offline"
+New-Item -ItemType Directory -Force -Path $baseDir | Out-Null
+Write-Host "Target folder: $baseDir" -ForegroundColor Cyan
+
+if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
+  Write-Host "Git was not found. Installing Git via winget..." -ForegroundColor Yellow
+  winget install --id Git.Git -e --source winget
+  $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+}
+
+$ghUser = "${GH_USER}"
+$portalDir = Join-Path $baseDir "talona-archives"
+if (-not (Test-Path (Join-Path $portalDir ".git"))) {
+  git clone --depth 1 "https://github.com/$ghUser/talona-archives.git" $portalDir
+} else {
+  git -C $portalDir pull
+}
+
+$repos = @(${repoArrayLiteral})
+foreach ($repo in $repos) {
+  $target = Join-Path $baseDir "repos\\$repo"
+  if (-not (Test-Path (Join-Path $target ".git"))) {
+    Write-Host "Cloning $repo..." -ForegroundColor Green
+    git clone --depth 1 "https://github.com/$ghUser/$repo.git" $target
+  } else {
+    Write-Host "Updating $repo..." -ForegroundColor Green
+    git -C $target pull
+  }
+}
+
+Write-Host "Done! Archive saved to: $baseDir" -ForegroundColor Cyan`;
+}
+
+function downloadInstallerScript() {
+  const repos = getArchiveRepos();
+  const script = buildInstallerScript(repos);
+  const blob = new Blob([script], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "install-talona-archives.ps1";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function copyCodeFromPre(btn) {
+  const pre = btn.parentElement.querySelector("pre");
+  if (!pre) return;
+  navigator.clipboard?.writeText(pre.textContent).then(() => {
+    const prev = btn.textContent;
+    btn.textContent = "Copied!";
+    setTimeout(() => btn.textContent = prev, 1500);
+  });
+}
+
+function openCatalog() {
+  isGuideView = false;
+  document.getElementById("nav-guide-btn")?.classList.remove("active");
+  document.getElementById("side-guide-btn")?.classList.remove("active");
+  if (location.hash === "#download") history.replaceState(null, "", location.pathname + location.search);
+  renderGrid();
+}
+
+function openDownloadGuide(updateHash = true) {
+  isGuideView = true;
+  window.scrollTo(0, 0);
+  if (updateHash) history.replaceState(null, "", "#download");
+  document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
+  document.getElementById("side-guide-btn")?.classList.add("active");
+  document.getElementById("nav-guide-btn")?.classList.add("active");
+
+  const repos = getArchiveRepos();
+  const repoPreview = repos.length ? repos.map(r => "│   ├── " + r + "/").join("\n") : "│   └── <collection-repos>/";
+  const installerCode = buildInstallerScript(repos);
+
+  const installGitCmd = `winget install --id Git.Git -e --source winget\ngit --version`;
+
+  document.getElementById("content").innerHTML = `
+    <div class="thread-actions">
+      <button class="back-btn" onclick="openCatalog()">← Back to Archive Catalog</button>
+      <button class="action-btn primary" onclick="downloadInstallerScript()">⬇ Download Installer (.ps1)</button>
+    </div>
+
+    <div class="record-header">
+      <div class="card-cat">Offline Access &amp; Setup</div>
+      <h2>How to Download &amp; Install Talonà Archives</h2>
+      <div class="card-meta">Download the portal and split archive repositories to your own computer using Git and PowerShell.</div>
+    </div>
+
+    <section class="guide-panel">
+      <h3>Step 1: Install Git</h3>
+      <p>Git is required to clone and update the archive repositories locally. You can install it on Windows via winget in PowerShell, or download the installer directly from <strong>git-scm.com</strong>.</p>
+      <ol class="guide-steps">
+        <li>Open <strong>Windows PowerShell</strong> (or Terminal).</li>
+        <li>Run the command below to install Git, then restart PowerShell and verify with <code>git --version</code>.</li>
+      </ol>
+      <div class="code-box-wrap">
+        <button class="copy-code-btn" onclick="copyCodeFromPre(this)">Copy</button>
+        <pre class="code-box">${escapeHtml(installGitCmd)}</pre>
+      </div>
+    </section>
+
+    <section class="guide-panel">
+      <h3>Step 2: Choose or Create Your Folder ("Make Folder in This Folder")</h3>
+      <p>The easy installer creates a <strong>Talona-Archives-Offline</strong> folder <em>inside whichever folder you are currently in</em>—so you decide the parent location just by <code>cd</code>-ing there first.</p>
+      <ol class="guide-steps">
+        <li>Navigate to the folder where you want the archive stored (for example, your <code>Documents</code> folder or an external drive).</li>
+        <li>The installer automatically creates <code>Talona-Archives-Offline</code> inside that folder and organizes the portal and collection repositories cleanly.</li>
+      </ol>
+      <div class="folder-tree">&lt;Your-Chosen-Folder&gt;/
+└── Talona-Archives-Offline/
+    ├── talona-archives/
+    └── repos/
+${escapeHtml(repoPreview)}</div>
+    </section>
+
+    <section class="guide-panel">
+      <h3>Step 3: Easy Installer Script</h3>
+      <p>Click <strong>Download Installer (.ps1)</strong> above or copy the script below. Open PowerShell in your target folder and run it to create <code>Talona-Archives-Offline</code> and pull the repositories.</p>
+      <div class="code-box-wrap">
+        <button class="copy-code-btn" onclick="copyCodeFromPre(this)">Copy Script</button>
+        <pre class="code-box">${escapeHtml(installerCode)}</pre>
+      </div>
+    </section>
+  `;
+}
 
 function openLightbox(src) {
   const lb = document.getElementById("lightbox");
@@ -461,6 +689,11 @@ function init() {
 
   document.getElementById("archive-stats").textContent = records.length + " archived threads across " + cats.length + " collections";
 
+  if (location.hash === "#download") {
+    openDownloadGuide(false);
+    return;
+  }
+
   const match = location.hash.match(/^#thread=(.+)$/);
   if (match) {
     const targetId = decodeURIComponent(match[1]);
@@ -474,15 +707,23 @@ function init() {
 }
 
 function selectCat(cat, btn) {
+  isGuideView = false;
+  document.getElementById("nav-guide-btn")?.classList.remove("active");
+  document.getElementById("side-guide-btn")?.classList.remove("active");
   activeCategory = cat;
   visibleCount = PAGE_SIZE;
-  document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll("#cat-list .cat-btn").forEach(b => b.classList.remove("active"));
   if (btn) btn.classList.add("active");
-  if (location.hash.startsWith("#thread=")) history.replaceState(null, "", location.pathname + location.search);
+  if (location.hash.startsWith("#thread=") || location.hash === "#download") {
+    history.replaceState(null, "", location.pathname + location.search);
+  }
   renderGrid();
 }
 
 function onFilterChange() {
+  isGuideView = false;
+  document.getElementById("nav-guide-btn")?.classList.remove("active");
+  document.getElementById("side-guide-btn")?.classList.remove("active");
   visibleCount = PAGE_SIZE;
   renderGrid();
 }
@@ -519,6 +760,7 @@ function getFilteredRecords() {
 }
 
 function renderGrid() {
+  if (isGuideView) return;
   const filtered = getFilteredRecords();
   const shown = filtered.slice(0, visibleCount);
   const main = document.getElementById("content");
@@ -559,6 +801,9 @@ function copyThreadLink(channelId, btn) {
 }
 
 function openRecord(idx, updateHash = true) {
+  isGuideView = false;
+  document.getElementById("nav-guide-btn")?.classList.remove("active");
+  document.getElementById("side-guide-btn")?.classList.remove("active");
   const r = records[idx];
   if (!r) return;
   const main = document.getElementById("content");
@@ -605,7 +850,7 @@ function openRecord(idx, updateHash = true) {
   const chId = (r.d.channel && r.d.channel.id) || "";
   main.innerHTML =
     '<div class="thread-actions">' +
-      '<button class="back-btn" onclick="renderGrid()">← Back to Archive Catalog</button>' +
+      '<button class="back-btn" onclick="openCatalog()">← Back to Archive Catalog</button>' +
       (chId ? '<button class="copy-link-btn" onclick="copyThreadLink(\'' + escapeHtml(chId) + '\', this)">Copy Thread Link</button>' : '') +
     '</div>' +
     '<div class="record-header"><div class="card-cat">' + escapeHtml(r.folder) + '</div><h2>' + escapeHtml((r.d.channel && r.d.channel.name) || "Thread") + '</h2>' +

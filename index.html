@@ -4,63 +4,375 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>University of Talonà — Digital Archives</title>
+<link rel="icon" href="talona-emblem.webp" type="image/webp">
 <style>
-  :root { --bg: #f4f3ef; --card: #ffffff; --ink: #1c1c1c; --muted: #5f5f5f; --accent: #2b4c7e; --border: #dcdad3; }
+  :root {
+    --bg: #f3f1ec;
+    --surface: #ffffff;
+    --surface-alt: #e8e5dc;
+    --ink: #181a1f;
+    --muted: #5c6270;
+    --accent: #24477a;
+    --accent-hover: #1b365e;
+    --gold: #d99b16;
+    --border: #d8d4c8;
+    --shadow: 0 2px 10px rgba(24, 26, 31, 0.06);
+  }
   * { box-sizing: border-box; }
-  body { margin: 0; font-family: Georgia, 'Times New Roman', serif; background: var(--bg); color: var(--ink); display: flex; flex-direction: column; min-height: 100vh; }
-  header { background: #1a1a1a; color: #f4f3ef; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid var(--accent); flex-wrap: wrap; gap: 12px; }
-  .brand { display: flex; align-items: center; gap: 12px; }
-  .brand img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 1px solid #555; }
-  .brand h1 { font-size: 1.25rem; margin: 0; letter-spacing: 0.4px; }
-  .brand span { font-family: system-ui, sans-serif; font-size: 0.78rem; color: #aaa; display: block; }
-  .search-bar { display: flex; gap: 8px; flex: 1; max-width: 480px; }
-  .search-bar input { flex: 1; padding: 8px 12px; border: 1px solid #444; background: #2b2b2b; color: #fff; font-family: system-ui, sans-serif; border-radius: 3px; }
+  body {
+    margin: 0;
+    font-family: Georgia, 'Times New Roman', serif;
+    background: var(--bg);
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  header {
+    background: linear-gradient(135deg, #161922 0%, #1f2636 100%);
+    color: #f6f5f0;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--gold);
+    flex-wrap: wrap;
+    gap: 14px;
+    position: sticky;
+    top: 0;
+    z-index: 30;
+  }
+  .brand { display: flex; align-items: center; gap: 13px; }
+  .brand img {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1.5px solid rgba(217, 155, 22, 0.7);
+    background: #232a3b;
+  }
+  .brand h1 { font-size: 1.25rem; margin: 0; letter-spacing: 0.3px; }
+  .brand span {
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 0.78rem;
+    color: #b7c0d1;
+    display: block;
+    margin-top: 2px;
+  }
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    max-width: 660px;
+    flex-wrap: wrap;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+  .controls input, .controls select {
+    padding: 8px 12px;
+    border: 1px solid #3c455c;
+    background: #232938;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 0.86rem;
+  }
+  .controls input { flex: 1; min-width: 180px; }
+  .controls input:focus, .controls select:focus { outline: 2px solid var(--gold); border-color: transparent; }
+  .toggle-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 11px;
+    background: #232938;
+    border: 1px solid #3c455c;
+    border-radius: 5px;
+    font-size: 0.82rem;
+    color: #e4e8f0;
+    cursor: pointer;
+    user-select: none;
+  }
+  .toggle-pill input { margin: 0; accent-color: var(--gold); cursor: pointer; }
+  .discord-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 14px;
+    background: #5865F2;
+    color: #fff;
+    text-decoration: none;
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 5px;
+    white-space: nowrap;
+    transition: background 0.15s ease;
+  }
+  .discord-btn:hover { background: #4752C4; }
   .layout { display: flex; flex: 1; }
-  nav { width: 250px; background: #eae8e1; border-right: 1px solid var(--border); padding: 16px; flex-shrink: 0; font-family: system-ui, sans-serif; }
-  nav h3 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin: 0 0 10px; }
-  .cat-btn { display: flex; justify-content: space-between; width: 100%; background: none; border: none; text-align: left; padding: 8px 10px; cursor: pointer; border-radius: 4px; color: var(--ink); font-size: 0.9rem; margin-bottom: 3px; }
-  .cat-btn:hover { background: #dcd9d0; }
+  nav {
+    width: 260px;
+    background: var(--surface-alt);
+    border-right: 1px solid var(--border);
+    padding: 18px 14px;
+    flex-shrink: 0;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+  nav h3 {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin: 0 0 10px 6px;
+  }
+  .cat-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 8px 10px;
+    cursor: pointer;
+    border-radius: 6px;
+    color: var(--ink);
+    font-size: 0.88rem;
+    margin-bottom: 3px;
+    transition: background 0.12s;
+  }
+  .cat-btn:hover { background: #dcd8cc; }
   .cat-btn.active { background: var(--accent); color: #fff; font-weight: 600; }
-  .badge { font-size: 0.75rem; opacity: 0.8; }
-  main { flex: 1; padding: 24px 32px; max-width: 1100px; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
-  .card { background: var(--card); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; cursor: pointer; transition: transform 0.12s, box-shadow 0.12s; display: flex; flex-direction: column; }
-  .card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-color: var(--accent); }
-  .card-thumb { height: 150px; background: #e3e1da; display: flex; align-items: center; justify-content: center; overflow: hidden; border-bottom: 1px solid var(--border); }
+  .badge {
+    font-size: 0.74rem;
+    padding: 1px 7px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.08);
+  }
+  .cat-btn.active .badge { background: rgba(255, 255, 255, 0.22); }
+  main { flex: 1; padding: 24px 30px; max-width: 1180px; width: 100%; }
+  .toolbar-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 0.84rem;
+    color: var(--muted);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(265px, 1fr));
+    gap: 18px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.14s ease, box-shadow 0.14s ease, border-color 0.14s ease;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow);
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(24, 26, 31, 0.12);
+    border-color: var(--accent);
+  }
+  .card-thumb {
+    height: 156px;
+    background: #e4e1d8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
   .card-thumb img { width: 100%; height: 100%; object-fit: cover; }
-  .card-thumb .placeholder { font-family: system-ui, sans-serif; font-size: 0.8rem; color: var(--muted); padding: 12px; text-align: center; }
-  .card-body { padding: 12px 14px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-  .card-cat { font-family: system-ui, sans-serif; font-size: 0.7rem; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 4px; }
-  .card-title { font-size: 1rem; font-weight: bold; margin: 0 0 8px; line-height: 1.3; }
-  .card-meta { font-family: system-ui, sans-serif; font-size: 0.75rem; color: var(--muted); }
-  .back-btn { font-family: system-ui, sans-serif; background: var(--card); border: 1px solid var(--border); padding: 7px 14px; border-radius: 4px; cursor: pointer; margin-bottom: 18px; font-weight: 600; }
-  .back-btn:hover { background: #eae8e1; }
-  .record-header { background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: 4px; margin-bottom: 20px; }
-  .record-header h2 { margin: 4px 0 8px; font-size: 1.6rem; }
-  .post { background: var(--card); border: 1px solid var(--border); padding: 18px 20px; border-radius: 4px; margin-bottom: 14px; }
-  .post-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-family: system-ui, sans-serif; }
-  .post-head img { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; }
-  .role-tag { font-size: 0.7rem; padding: 2px 6px; border-radius: 3px; background: #eee; color: #333; margin-left: 6px; }
-  .post-text { line-height: 1.6; white-space: pre-wrap; font-size: 1rem; }
+  .card-thumb .placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 0.78rem;
+    color: var(--muted);
+    padding: 12px;
+    text-align: center;
+  }
+  .card-thumb .placeholder img {
+    width: 42px;
+    height: 42px;
+    border-radius: 6px;
+    opacity: 0.75;
+    object-fit: cover;
+  }
+  .card-body {
+    padding: 13px 15px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .card-cat {
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .card-title { font-size: 1.02rem; font-weight: bold; margin: 0; line-height: 1.32; }
+  .card-meta {
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  .load-more-wrap { text-align: center; margin-top: 24px; }
+  .load-more-btn, .back-btn, .copy-link-btn {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.86rem;
+    color: var(--ink);
+    transition: background 0.12s, border-color 0.12s;
+  }
+  .load-more-btn:hover, .back-btn:hover, .copy-link-btn:hover {
+    background: var(--surface-alt);
+    border-color: var(--accent);
+  }
+  .thread-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+  .record-header {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    padding: 20px 22px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+  .record-header h2 { margin: 4px 0 8px; font-size: 1.55rem; }
+  .post {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 18px 20px;
+    border-radius: 6px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow);
+  }
+  .post-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+  .post-head img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #e6e3d8;
+  }
+  .role-tag {
+    font-size: 0.7rem;
+    padding: 2px 7px;
+    border-radius: 3px;
+    background: #f1efe9;
+    color: #333;
+    margin-left: 6px;
+  }
+  .post-text { line-height: 1.62; white-space: pre-wrap; font-size: 1rem; word-break: break-word; }
   .attachments { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
-  .attachments img { max-width: 100%; max-height: 520px; border: 1px solid var(--border); border-radius: 3px; }
-  .embed { border-left: 3px solid var(--accent); background: #f9f8f5; padding: 10px 14px; margin-top: 10px; font-family: system-ui, sans-serif; font-size: 0.9rem; }
-  @media (max-width: 760px) { .layout { flex-direction: column; } nav { width: 100%; border-right: none; border-bottom: 1px solid var(--border); } }
+  .attachments img {
+    max-width: 100%;
+    max-height: 520px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: zoom-in;
+  }
+  .embed {
+    border-left: 3px solid var(--accent);
+    background: #f8f7f3;
+    padding: 10px 14px;
+    margin-top: 10px;
+    border-radius: 0 4px 4px 0;
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 0.9rem;
+  }
+  footer {
+    background: #161922;
+    color: #b7c0d1;
+    border-top: 2px solid var(--border);
+    padding: 18px 24px;
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 0.84rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  footer a { color: #8fb4ff; text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+  .lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 12, 18, 0.9);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox img {
+    max-width: 95vw;
+    max-height: 90vh;
+    border-radius: 6px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  }
+  @media (max-width: 820px) {
+    .layout { flex-direction: column; }
+    nav { width: 100%; border-right: none; border-bottom: 1px solid var(--border); }
+    main { padding: 18px 16px; }
+  }
 </style>
 </head>
 <body>
 <header>
   <div class="brand">
-    <img id="guild-icon" src="" onerror="this.style.display='none'">
+    <img id="guild-icon" src="talona-emblem.webp" alt="University of Talonà Emblem" onerror="this.style.display='none'">
     <div>
-      <h1 id="guild-name">University of Talonà — Archives</h1>
+      <h1 id="guild-name">University of Talonà — Digital Archives</h1>
       <span id="archive-stats">Loading static archive...</span>
     </div>
   </div>
-  <div class="search-bar">
-    <input type="text" id="search" placeholder="Search titles, authors, or message text..." oninput="renderGrid()">
+  <div class="controls">
+    <input type="text" id="search" placeholder="Search titles, authors, or message text..." oninput="onFilterChange()">
+    <select id="sort-select" onchange="onFilterChange()">
+      <option value="default">Sort: Default</option>
+      <option value="newest">Newest Thread</option>
+      <option value="oldest">Oldest Thread</option>
+      <option value="messages">Most Posts</option>
+    </select>
+    <label class="toggle-pill">
+      <input type="checkbox" id="media-only" onchange="onFilterChange()">
+      <span>Media Only</span>
+    </label>
   </div>
+  <a class="discord-btn" href="https://discord.gg/S4AyCpAs9X" target="_blank" rel="noopener noreferrer">Discord Server</a>
 </header>
+
 <div class="layout">
   <nav id="sidebar">
     <h3>Collections</h3>
@@ -68,92 +380,239 @@
   </nav>
   <main id="content"></main>
 </div>
+
+<footer>
+  <span>University of Talonà Digital Archives · Hosted on GitHub Pages</span>
+  <span>
+    <a href="https://guyrandomjust-del.github.io/" target="_blank" rel="noopener noreferrer">Creator Hub</a>
+    ·
+    <a href="https://discord.gg/S4AyCpAs9X" target="_blank" rel="noopener noreferrer">Discord Server</a>
+  </span>
+</footer>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <img id="lightbox-img" src="" alt="Full-size attachment">
+</div>
+
 <script src="archive-data.js"></script>
 <script>
 const GH_USER = "guyrandomjust-del";
+const PAGE_SIZE = 48;
+let activeCategory = "ALL";
+let visibleCount = PAGE_SIZE;
+
+function escapeHtml(str) {
+  return String(str || "").replace(/[&<>"']/g, ch => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[ch]));
+}
+
+function hasAttachment(d) {
+  return (d.messages || []).some(m => Array.isArray(m.attachments) && m.attachments.length > 0);
+}
+
 const records = (window.ARCHIVE_DATA || []).map(entry => {
   const d = entry.data;
   const folder = entry.folder;
   const fixPath = p => {
-    if (!p) return '';
-    if (p.startsWith('http')) return p;
-    const clean = p.replace(/\\/g, '/').split('/').map(encodeURIComponent).join('/');
-    return 'https://' + GH_USER + '.github.io/' + folder + '/' + clean;
+    if (!p) return "";
+    if (p.startsWith("http")) return p;
+    const clean = p.replace(/\\/g, "/").split("/").map(encodeURIComponent).join("/");
+    return "https://" + GH_USER + ".github.io/" + folder + "/" + clean;
   };
-  let thumb = '';
-  for (const m of d.messages) {
+  let thumb = "";
+  for (const m of (d.messages || [])) {
     const img = (m.attachments || []).find(a => /\.(png|jpe?g|gif|webp)$/i.test(a.fileName));
     if (img) { thumb = fixPath(img.url); break; }
   }
-  return { folder, d, fixPath, thumb };
+  return { folder, d, fixPath, thumb, hasMedia: hasAttachment(d) };
 });
-let activeCategory = 'ALL';
+
+function openLightbox(src) {
+  const lb = document.getElementById("lightbox");
+  const img = document.getElementById("lightbox-img");
+  img.src = src;
+  lb.classList.add("open");
+}
+
+function closeLightbox() {
+  document.getElementById("lightbox").classList.remove("open");
+  document.getElementById("lightbox-img").src = "";
+}
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeLightbox();
+});
+
 function init() {
   if (records.length > 0) {
     const first = records[0];
-    document.getElementById('guild-name').textContent = first.d.guild.name + ' — Digital Archives';
-    if (first.d.guild.iconUrl) document.getElementById('guild-icon').src = first.fixPath(first.d.guild.iconUrl);
+    if (first.d.guild && first.d.guild.name) {
+      document.getElementById("guild-name").textContent = first.d.guild.name + " — Digital Archives";
+    }
   }
   const counts = {};
   records.forEach(r => counts[r.folder] = (counts[r.folder] || 0) + 1);
   const cats = Object.keys(counts).sort();
-  document.getElementById('cat-list').innerHTML = '<button class="cat-btn active" onclick="selectCat(\'ALL\', this)"><span>All Collections</span><span class="badge">' + records.length + '</span></button>' +
-    cats.map(c => '<button class="cat-btn" onclick="selectCat(\'' + c + '\', this)"><span>' + c + '</span><span class="badge">' + counts[c] + '</span></button>').join('');
-  document.getElementById('archive-stats').textContent = records.length + ' archived threads across ' + cats.length + ' collections';
+
+  document.getElementById("cat-list").innerHTML =
+    '<button class="cat-btn active" onclick="selectCat(\'ALL\', this)"><span>All Collections</span><span class="badge">' + records.length + '</span></button>' +
+    cats.map(c => '<button class="cat-btn" onclick="selectCat(\'' + escapeHtml(c) + '\', this)"><span>' + escapeHtml(c) + '</span><span class="badge">' + counts[c] + '</span></button>').join("");
+
+  document.getElementById("archive-stats").textContent = records.length + " archived threads across " + cats.length + " collections";
+
+  const match = location.hash.match(/^#thread=(.+)$/);
+  if (match) {
+    const targetId = decodeURIComponent(match[1]);
+    const idx = records.findIndex(r => String(r.d.channel && r.d.channel.id) === targetId);
+    if (idx !== -1) {
+      openRecord(idx, false);
+      return;
+    }
+  }
   renderGrid();
 }
+
 function selectCat(cat, btn) {
   activeCategory = cat;
-  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-  if (btn) btn.classList.add('active');
+  visibleCount = PAGE_SIZE;
+  document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
+  if (btn) btn.classList.add("active");
+  if (location.hash.startsWith("#thread=")) history.replaceState(null, "", location.pathname + location.search);
   renderGrid();
 }
-function renderGrid() {
-  const q = document.getElementById('search').value.toLowerCase().trim();
-  const filtered = records.filter(r => {
-    if (activeCategory !== 'ALL' && r.folder !== activeCategory) return false;
-    if (!q) return true;
-    if (r.d.channel.name.toLowerCase().includes(q) || r.folder.toLowerCase().includes(q)) return true;
-    return r.d.messages.some(m => (m.content || '').toLowerCase().includes(q) || (m.author.nickname || m.author.name || '').toLowerCase().includes(q));
-  });
-  document.getElementById('content').innerHTML = '<div class="grid">' + filtered.map(r => {
-    const realIdx = records.indexOf(r);
-    const firstMsg = r.d.messages[0];
-    const date = firstMsg ? new Date(firstMsg.timestamp).toLocaleDateString() : '';
-    const author = firstMsg ? (firstMsg.author.nickname || firstMsg.author.name) : 'Unknown';
-    return '<div class="card" onclick="openRecord(' + realIdx + ')">' +
-      '<div class="card-thumb">' + (r.thumb ? '<img src="' + r.thumb + '" loading="lazy">' : '<div class="placeholder">Text / Document Archive</div>') + '</div>' +
-      '<div class="card-body"><div><div class="card-cat">' + r.folder + '</div><div class="card-title">' + r.d.channel.name + '</div></div>' +
-      '<div class="card-meta">By ' + author + ' • ' + date + ' • ' + r.d.messageCount + ' post(s)</div></div></div>';
-  }).join('') + '</div>';
+
+function onFilterChange() {
+  visibleCount = PAGE_SIZE;
+  renderGrid();
 }
-function openRecord(idx) {
+
+function getFilteredRecords() {
+  const q = document.getElementById("search").value.toLowerCase().trim();
+  const sortBy = document.getElementById("sort-select").value;
+  const mediaOnly = document.getElementById("media-only").checked;
+
+  const list = records.filter(r => {
+    if (activeCategory !== "ALL" && r.folder !== activeCategory) return false;
+    if (mediaOnly && !r.hasMedia) return false;
+    if (!q) return true;
+    const chName = ((r.d.channel && r.d.channel.name) || "").toLowerCase();
+    if (chName.includes(q) || r.folder.toLowerCase().includes(q)) return true;
+    return (r.d.messages || []).some(m =>
+      (m.content || "").toLowerCase().includes(q) ||
+      (((m.author && (m.author.nickname || m.author.name)) || "").toLowerCase().includes(q))
+    );
+  });
+
+  if (sortBy === "messages") {
+    return [...list].sort((a, b) => (b.d.messageCount || 0) - (a.d.messageCount || 0));
+  }
+  if (sortBy === "newest" || sortBy === "oldest") {
+    const dir = sortBy === "newest" ? -1 : 1;
+    return [...list].sort((a, b) => {
+      const ta = new Date((a.d.messages[0] && a.d.messages[0].timestamp) || 0).getTime();
+      const tb = new Date((b.d.messages[0] && b.d.messages[0].timestamp) || 0).getTime();
+      return (ta - tb) * dir;
+    });
+  }
+  return list;
+}
+
+function renderGrid() {
+  const filtered = getFilteredRecords();
+  const shown = filtered.slice(0, visibleCount);
+  const main = document.getElementById("content");
+
+  const cardsHtml = shown.map(r => {
+    const realIdx = records.indexOf(r);
+    const firstMsg = (r.d.messages || [])[0];
+    const date = firstMsg ? new Date(firstMsg.timestamp).toLocaleDateString() : "";
+    const author = firstMsg && firstMsg.author ? (firstMsg.author.nickname || firstMsg.author.name) : "Unknown";
+    const title = escapeHtml((r.d.channel && r.d.channel.name) || "Untitled Thread");
+    const thumbHtml = r.thumb
+      ? '<img src="' + escapeHtml(r.thumb) + '" loading="lazy" alt="' + title + '" onerror="this.parentElement.innerHTML=\'<div class=placeholder><img src=talona-emblem.webp><span>Media Unavailable</span></div>\'">'
+      : '<div class="placeholder"><img src="talona-emblem.webp" alt=""><span>Text / Document Archive</span></div>';
+
+    return '<div class="card" onclick="openRecord(' + realIdx + ')">' +
+      '<div class="card-thumb">' + thumbHtml + '</div>' +
+      '<div class="card-body"><div><div class="card-cat">' + escapeHtml(r.folder) + '</div><div class="card-title">' + title + '</div></div>' +
+      '<div class="card-meta">By ' + escapeHtml(author) + (date ? ' • ' + date : '') + ' • ' + (r.d.messageCount || 0) + ' post(s)</div></div></div>';
+  }).join("");
+
+  const loadMoreHtml = filtered.length > shown.length
+    ? '<div class="load-more-wrap"><button class="load-more-btn" onclick="visibleCount += PAGE_SIZE; renderGrid()">Load More (' + (filtered.length - shown.length) + ' remaining)</button></div>'
+    : "";
+
+  main.innerHTML =
+    '<div class="toolbar-info"><span>Showing ' + shown.length + ' of ' + filtered.length + ' matching thread(s)</span><span>Collection: ' + escapeHtml(activeCategory) + '</span></div>' +
+    (cardsHtml ? '<div class="grid">' + cardsHtml + '</div>' : '<div class="record-header">No archived threads match your current filters.</div>') +
+    loadMoreHtml;
+}
+
+function copyThreadLink(channelId, btn) {
+  const url = location.origin + location.pathname + "#thread=" + encodeURIComponent(channelId);
+  navigator.clipboard?.writeText(url).then(() => {
+    const prev = btn.textContent;
+    btn.textContent = "Link Copied!";
+    setTimeout(() => btn.textContent = prev, 1600);
+  });
+}
+
+function openRecord(idx, updateHash = true) {
   const r = records[idx];
+  if (!r) return;
+  const main = document.getElementById("content");
   window.scrollTo(0, 0);
-  const postsHtml = r.d.messages.map(m => {
-    const author = m.author.nickname || m.author.name;
-    const topRole = (m.author.roles || [])[0];
-    const roleBadge = topRole ? '<span class="role-tag" style="border-left: 3px solid ' + (topRole.color || '#666') + '">' + topRole.name + '</span>' : '';
-    const avatar = r.fixPath(m.author.avatarUrl);
-    const time = new Date(m.timestamp).toLocaleString();
+  if (updateHash && r.d.channel && r.d.channel.id) {
+    history.replaceState(null, "", "#thread=" + encodeURIComponent(r.d.channel.id));
+  }
+
+  const postsHtml = (r.d.messages || []).map(m => {
+    const author = m.author ? (m.author.nickname || m.author.name) : "Unknown";
+    const topRole = (m.author && m.author.roles && m.author.roles[0]) || null;
+    const roleBadge = topRole
+      ? '<span class="role-tag" style="border-left: 3px solid ' + escapeHtml(topRole.color || "#666") + '">' + escapeHtml(topRole.name) + '</span>'
+      : "";
+    const avatar = r.fixPath(m.author && m.author.avatarUrl);
+    const time = m.timestamp ? new Date(m.timestamp).toLocaleString() : "";
+
     const atts = (m.attachments || []).map(a => {
       const src = r.fixPath(a.url);
-      if (/\.(png|jpe?g|gif|webp)$/i.test(a.fileName)) return '<a href="' + src + '" target="_blank"><img src="' + src + '" alt="' + a.fileName + '"></a>';
-      if (/\.(mp3|wav|ogg)$/i.test(a.fileName)) return '<audio controls src="' + src + '"></audio>';
-      if (/\.(mp4|webm|mov)$/i.test(a.fileName)) return '<video controls style="max-width:100%" src="' + src + '"></video>';
-      return '<a href="' + src + '" download="' + a.fileName + '">📎 Download ' + a.fileName + '</a>';
-    }).join('');
-    const embeds = (m.embeds || []).map(e => '<div class="embed"><strong>' + (e.title || '') + '</strong><div>' + (e.description || '') + '</div></div>').join('');
-    return '<article class="post"><div class="post-head"><img src="' + avatar + '" onerror="this.style.display=\'none\'">' +
-      '<div><strong>' + author + '</strong>' + roleBadge + '<div style="font-size:0.75rem;color:#666">' + time + '</div></div></div>' +
-      (m.content ? '<div class="post-text">' + m.content.replace(/</g, '&lt;') + '</div>' : '') +
+      const safeName = escapeHtml(a.fileName || "attachment");
+      if (/\.(png|jpe?g|gif|webp)$/i.test(a.fileName || "")) {
+        return '<img src="' + escapeHtml(src) + '" alt="' + safeName + '" onclick="openLightbox(\'' + escapeHtml(src) + '\')">';
+      }
+      if (/\.(mp3|wav|ogg)$/i.test(a.fileName || "")) {
+        return '<audio controls src="' + escapeHtml(src) + '"></audio>';
+      }
+      if (/\.(mp4|webm|mov)$/i.test(a.fileName || "")) {
+        return '<video controls style="max-width:100%" src="' + escapeHtml(src) + '"></video>';
+      }
+      return '<a href="' + escapeHtml(src) + '" download="' + safeName + '">📎 Download ' + safeName + '</a>';
+    }).join("");
+
+    const embeds = (m.embeds || []).map(e =>
+      '<div class="embed"><strong>' + escapeHtml(e.title || "") + '</strong><div>' + escapeHtml(e.description || "") + '</div></div>'
+    ).join("");
+
+    return '<article class="post"><div class="post-head">' +
+      (avatar ? '<img src="' + escapeHtml(avatar) + '" alt="" onerror="this.style.display=\'none\'">' : '') +
+      '<div><strong>' + escapeHtml(author) + '</strong>' + roleBadge + '<div style="font-size:0.75rem;color:#666">' + escapeHtml(time) + '</div></div></div>' +
+      (m.content ? '<div class="post-text">' + escapeHtml(m.content) + '</div>' : '') +
       (atts ? '<div class="attachments">' + atts + '</div>' : '') + embeds + '</article>';
-  }).join('');
-  document.getElementById('content').innerHTML = '<button class="back-btn" onclick="renderGrid()">← Back to Archive Catalog</button>' +
-    '<div class="record-header"><div class="card-cat">' + r.folder + '</div><h2>' + r.d.channel.name + '</h2>' +
-    '<div class="card-meta">Thread ID: ' + r.d.channel.id + ' • Archived: ' + new Date(r.d.exportedAt).toLocaleDateString() + ' • ' + r.d.messageCount + ' messages</div></div>' +
+  }).join("");
+
+  const chId = (r.d.channel && r.d.channel.id) || "";
+  main.innerHTML =
+    '<div class="thread-actions">' +
+      '<button class="back-btn" onclick="renderGrid()">← Back to Archive Catalog</button>' +
+      (chId ? '<button class="copy-link-btn" onclick="copyThreadLink(\'' + escapeHtml(chId) + '\', this)">Copy Thread Link</button>' : '') +
+    '</div>' +
+    '<div class="record-header"><div class="card-cat">' + escapeHtml(r.folder) + '</div><h2>' + escapeHtml((r.d.channel && r.d.channel.name) || "Thread") + '</h2>' +
+    '<div class="card-meta">Thread ID: ' + escapeHtml(chId) + (r.d.exportedAt ? ' • Archived: ' + new Date(r.d.exportedAt).toLocaleDateString() : '') + ' • ' + (r.d.messageCount || 0) + ' messages</div></div>' +
     postsHtml;
 }
+
 init();
 </script>
 </body>

@@ -79,15 +79,7 @@
     display: block;
     margin-top: 2px;
   }
-  .controls {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex: 2 1 320px;
-    max-width: 100%;
-    flex-wrap: wrap;
-    font-family: system-ui, -apple-system, sans-serif;
-  }
+  .controls { display: flex; align-items: center; gap: 8px; flex: 1 1 auto; max-width: 100%; flex-wrap: wrap; font-family: system-ui, -apple-system, sans-serif; }
   .controls input, .controls select {
     padding: clamp(6px, 0.7vw, 8px) clamp(8px, 1vw, 12px);
     border: 1px solid #3c455c;
@@ -100,29 +92,9 @@
   .controls input { flex: 1 1 160px; }
   .controls select { flex: 0 1 auto; }
   .controls input:focus, .controls select:focus { outline: 2px solid var(--gold); border-color: transparent; }
-  .toggle-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: clamp(6px, 0.65vw, 7px) 10px;
-    background: #232938;
-    border: 1px solid #3c455c;
-    border-radius: 5px;
-    font-size: clamp(0.76rem, 0.2vw + 0.72rem, 0.82rem);
-    color: #e4e8f0;
-    cursor: pointer;
-    user-select: none;
-    white-space: nowrap;
-  }
+  .toggle-pill { display: inline-flex; align-items: center; gap: 6px; padding: clamp(6px, 0.65vw, 7px) 10px; background: #232938; border: 1px solid #3c455c; border-radius: 5px; font-size: clamp(0.76rem, 0.2vw + 0.72rem, 0.82rem); color: #e4e8f0; cursor: pointer; user-select: none; white-space: nowrap; flex-shrink: 0; }
   .toggle-pill input { margin: 0; accent-color: var(--gold); cursor: pointer; }
-  .header-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    font-family: system-ui, -apple-system, sans-serif;
-    max-width: 100%;
-  }
+  .header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; flex-shrink: 0; font-family: system-ui, -apple-system, sans-serif; max-width: 100%; }
   .guide-btn {
     display: inline-flex;
     align-items: center;
